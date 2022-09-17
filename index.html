@@ -8,38 +8,59 @@
   <title>Document</title>
 </head>
 <body>
-  <div class="player-container">
-    <!-- <span> -->
-      <label for="player1">Player 1: </label>
-      <input type="text" name="player1" id="player1">
-    <!-- </span> -->
-    <span>
-      <div>Choose your sign!</div>
-      <button type="button" id="X">X</button>
-      <button type="button" id="O">O</button>
-    </span>
-    <!-- <span> -->
-      <label for="player2">Player 2:</label>
-      <input type="text" name="player2" id="player2">
-    <!-- </span> -->
-    <span>
-      <div>Choose your sign!</div>
-      <button type="button" id="X">X</button>
-      <button type="button" id="O">O</button>
-    </span>
-  </div>
- 
-  <div class="board-container">
-    <div class="cell" id="0"></div>
-    <div class="cell" id="1"></div>
-    <div class="cell" id="2"></div>
-    <div class="cell" id="3"></div>
-    <div class="cell" id="4"></div>
-    <div class="cell" id="5"></div>
-    <div class="cell" id="6"></div>
-    <div class="cell" id="7"></div>
-    <div class="cell" id="8"></div>
-  </div>
+  <div class="container">
+      <h1>Tic Tac Toe</h1>
+      <div>
+        <button class="trigger-1">1 Player mode</button>
+        <div class="modal modal-1">
+          <div class="modal-content">
+            <button type="button" class="close-button-1">&times;</button>
+            <h1>Create player</h1>
+            <form action="" class="one-player">
+              <label for="player">Player: </label>
+              <input type="text" name="player1" id="player">
+              <button class="start-game-button" id="sg-btn1">START GAME</button>
+            </form>
+          </div>
+        </div>
+        <button class="trigger-2">2 Player mode</button>
+        <div class="modal modal-2">
+          <div class="modal-content">
+            <button type="button" class="close-button-2">&times;</button>
+            <h1>Create players</h1>
+            <form action="" class="two-player">
+              <label for="player1">Player 1: </label>
+              <input type="text" name="player1" id="player1">
+              <label for="player2">Player 2:</label>
+              <input type="text" name="player2" id="player2">
+              <button class="start-game-button" id="sg-btn2">START GAME</button>
+            </form>
+          </div>
+        </div>
+        <div class="modal message-modal">
+          <div class="modal-content">
+            <button type="button" class="close-button-3">&times;</button>
+            <h1 class="message-head"></h1>
+            <p></p>
+          </div>
+        </div>
+      </div>
+      <div class="board-container">
+        <div class="cell" id="0"></div>
+        <div class="cell" id="1"></div>
+        <div class="cell" id="2"></div>
+        <div class="cell" id="3"></div>
+        <div class="cell" id="4"></div>
+        <div class="cell" id="5"></div>
+        <div class="cell" id="6"></div>
+        <div class="cell" id="7"></div>
+        <div class="cell" id="8"></div>
+      </div>
+      <div class="hint">
+        <div>Select player mode:</div>
+        <p>* to start game</p>
+        <p>* for new game</p>
+      </div>
   <script src="script.js"></script>
 </body>
 </html>
