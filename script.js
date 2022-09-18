@@ -1,4 +1,5 @@
-const Gameboard = (() => {
+const gameBoard = (() => {
+  
   const boardContainer = document.querySelector('.board-container');
   const cells = document.querySelectorAll('.cell');
   
@@ -18,92 +19,151 @@ const Gameboard = (() => {
     });
   }
 
-  return {render, emptyCells, boardContainer, board}
+  return { render, emptyCells, boardContainer, board }
 
 })();
 
-Gameboard.render();
+// gameBoard.render();
 
 
-const Player = (name, sign) => {
+const Player = (name, sign, start, wins) => {
   const getSign = () => sign;
   const getName = () => name;
   let board = ['', '', '', '', '', '', '', '', ''];
+  start: start;
+  wins: wins;
 
-  return {getSign, getName, board};
+  return {getSign, getName, board, start, wins};
 }
 
 
 const displayController = (() => {
-  let counter = 0;
+  let turnsCounter = 0;
   let winner, player1, player2;
-  const onePlayer = document.querySelector('#sg-btn1');
-  const twoPlayer = document.querySelector('#sg-btn2');
+  const chooseModeBtn = document.querySelectorAll('.start-game-button');
+  const roundCounter = document.querySelector('.round-counter');
+  const player1Container = document.querySelector('.player-1-container'); 
+  const player2Container = document.querySelector('.player-2-container'); 
+  const player1Counter = document.querySelector('.player-1-counter');
+  const player2Counter = document.querySelector('.player-2-counter');
+  const nextRoundBtn = document.querySelector('.next-round');
+  const resetBtn = document.querySelector('.reset');
+  const mainNextRoundBtn = document.querySelector('.next-round-main');
+  const messageContainer = document.querySelector('.message-container');
+  let round = 1;
 
-  onePlayer.addEventListener('click', e => {
-    e.preventDefault();
-    resetGame();
-    player1 = Player(document. querySelector('#player').value, 'X');
-    player2 = Player('Computer', 'O');
-    modalController.toggleModal1();
-    playGame();
+  chooseModeBtn.forEach((button) => {
+    button.addEventListener('click', e => {
+      e.preventDefault();
+      modalController.trigger1.style.visibility = 'hidden';
+      modalController.trigger2.style.visibility = 'hidden';
+      resetBtn.style.visibility = 'visible';
+      mainNextRoundBtn.style.visibility = 'visible';
+      let id = e.target.id;
+      if (id === 'sg-btn1') {
+        player1 = Player(document. querySelector('#player').value, 'X', true, 0);
+        player2 = Player('Computer', 'O', false, 0);
+        modalController.toggleModal1();
+      } else if (id === 'sg-btn2') {
+        player1 = Player(document. querySelector('#player1').value, 'X', true, 0);
+        player2 = Player(document. querySelector('#player2').value, 'O', false, 0);
+        modalController.toggleModal2();
+      }
+      messageContainer.innerText = `${player1.getName()} make your move`;
+      updateRoundCounter();
+      playGame();
+    });
+  });
+  
+  nextRoundBtn.addEventListener('click', e => {
+    nextRound();
+    modalController.toggleMessageModal();
+  });
+  
+  mainNextRoundBtn.addEventListener('click', e => {
+    nextRound();
   });
 
-  twoPlayer.addEventListener('click', e => {
-    e.preventDefault();
-    resetGame();
-    player1 = Player(document. querySelector('#player1').value, 'X');
-    player2 = Player(document. querySelector('#player2').value, 'O');
-    modalController.toggleModal2();
-    playGame();
-  });
+  resetBtn.addEventListener('click', e => {
 
-  const resetGame = () => {
-    for (let i = 0; i < 9; i++) {
-      Gameboard.board[i] = '';
+  })
+  
+  const updateRoundCounter = () => {
+    roundCounter.innerText = round;
+    player1Container.innerText = `${player1.getName()}:`;
+    player1Counter.innerText = player1.wins;
+    player2Container.innerText = `${player2.getName()}:`;
+    player2Counter.innerText = player2.wins;
+  }
+  
+  const nextRound = () => {
+    round++;
+    resetBoard();
+    if (player1.turn === true) {
+      player1.turn = false;
+      player2.turn = true;
+    } else {
+      player1.turn = true;
+      player2.turn = false;
     }
-    Gameboard.emptyCells();
+    player1.board = ['', '', '', '', '', '', '', '', ''];
+    player2.board = ['', '', '', '', '', '', '', '', ''];
+    updateRoundCounter();
+    playGame();
+  }
+
+  const resetBoard = () => {
+    for (let i = 0; i < 9; i++) {
+      gameBoard.board[i] = '';
+    }
+    gameBoard.emptyCells();
     winner = undefined;
-    counter = 0;
+    turnsCounter = 0;
   }
 
   const playGame = () => {
-    Gameboard.boardContainer.onclick = (event) => {
+
+    gameBoard.boardContainer.onclick = (event) => {
       let target = event.target;
       let index = target.getAttribute('id');
-      let cell = Gameboard.board[index];
+      let cell = gameBoard.board[index];
 
 
       if (cell === '') {
-        if (counter % 2 === 0) {
+        if (turnsCounter % 2 === 0) {
           drawBoard(player1, index);
         } else {
           drawBoard(player2, index);
         }
 
-        if (counter <= 7) {
-          counter++;
+        if (turnsCounter <= 7) {
+          turnsCounter++;
         } else if (winner === undefined) {
           isTie();
         } 
       }
 
-      Gameboard.emptyCells();
-      Gameboard.render();
+      gameBoard.emptyCells();
+      gameBoard.render();
 
       if (winner !== undefined) {
         let opponent = player2.getName();
         modalController.toggleMessageModal(winner, opponent);
-        Gameboard.boardContainer.onclick = '';
+        gameBoard.boardContainer.onclick = '';
       }
     }
   }
 
   const drawBoard = (player, index) => {
     let sign = player.getSign();
-    Gameboard.board[index] = sign;
+    if (player === player1) {
+      messageContainer.innerText = `${player2.getName()} make your move`;
+    } else {
+      messageContainer.innerText = `${player1.getName()} make your move`;
+    }
+    gameBoard.board[index] = sign;
     player.board.splice(index, 1, sign);
-    if (counter >= 4) {
+    if (turnsCounter >= 4) {
       winner = checkPlayer(player, sign);
     }
   }
@@ -116,6 +176,7 @@ const displayController = (() => {
         playersPattern.push(player.board[element]);
       }
       if (patternToMatch.toString() === playersPattern.toString()) {
+        player.wins++;
         return player.getName();
       }
     }
@@ -123,7 +184,7 @@ const displayController = (() => {
 
   const isTie = () => {
     modalController.toggleTie();
-    Gameboard.boardContainer.onclick = '';
+    gameBoard.boardContainer.onclick = '';
   }
 
   const winningPattern = [
@@ -198,6 +259,6 @@ const modalController = (() => {
   closeButton3.addEventListener('click', closeMessageModal);
   window.addEventListener('click', windowOnClick);
 
-  return {toggleModal1, toggleModal2, toggleMessageModal, toggleTie};
+  return { trigger1, trigger2, toggleModal1, toggleModal2, toggleMessageModal, toggleTie };
 
 })();
