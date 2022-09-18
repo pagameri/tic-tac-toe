@@ -23,7 +23,6 @@ const gameBoard = (() => {
 
 })();
 
-// gameBoard.render();
 
 
 const Player = (name, sign, start, wins) => {
@@ -38,6 +37,21 @@ const Player = (name, sign, start, wins) => {
 
 
 const displayController = (() => {
+  
+  // _startUp();
+
+  // function _startUp() {
+  //   modalController.trigger1.style.visibility = 'hidden';
+  //   modalController.trigger2.style.visibility = 'hidden';
+  // }
+  
+  
+  
+  
+  
+  
+  
+  
   let turnsCounter = 0;
   let winner, player1, player2;
   const chooseModeBtn = document.querySelectorAll('.start-game-button');
@@ -55,19 +69,22 @@ const displayController = (() => {
   chooseModeBtn.forEach((button) => {
     button.addEventListener('click', e => {
       e.preventDefault();
-      modalController.trigger1.style.visibility = 'hidden';
-      modalController.trigger2.style.visibility = 'hidden';
+      modalController.modalTrigger.forEach((trigger) => {
+        trigger.style.visibility = 'hidden';
+      });
+      // modalController.modalTrigger.style.visibility = 'hidden';
+      // modalController.trigger2.style.visibility = 'hidden';
       resetBtn.style.visibility = 'visible';
       mainNextRoundBtn.style.visibility = 'visible';
       let id = e.target.id;
       if (id === 'sg-btn1') {
         player1 = Player(document. querySelector('#player').value, 'X', true, 0);
         player2 = Player('Computer', 'O', false, 0);
-        modalController.toggleModal1();
+        modalController.togglePlayerModal(e);
       } else if (id === 'sg-btn2') {
         player1 = Player(document. querySelector('#player1').value, 'X', true, 0);
         player2 = Player(document. querySelector('#player2').value, 'O', false, 0);
-        modalController.toggleModal2();
+        modalController.togglePlayerModal(e);
       }
       messageContainer.innerText = `${player1.getName()} make your move`;
       updateRoundCounter();
@@ -197,25 +214,35 @@ const displayController = (() => {
 
 
 const modalController = (() => {
-  const modal1 = document.querySelector('.modal-1');
-  const modal2 = document.querySelector('.modal-2');
+  const onePlayerModal = document.querySelector('.one-player-modal');//
+  const twoPlayerModal = document.querySelector('.two-player-modal');//
   const messageModal = document.querySelector('.message-modal');
-  const trigger1 = document.querySelector('.trigger-1');
-  const trigger2 = document.querySelector('.trigger-2');
-  const closeButton1 = document.querySelector('.close-button-1');
-  const closeButton2 = document.querySelector('.close-button-2');
+  const modalTrigger = document.querySelectorAll('.modal-trigger');//
+  const closePlayerModal = document.querySelectorAll('.close-player-modal');
+  // const closeButton1 = document.querySelector('.close-button-1');
+  // const closeButton2 = document.querySelector('.close-button-2');
   const closeButton3 = document.querySelector('.close-button-3');
   const messageHead = document.querySelector('.message-head');
   const message = document.querySelector('.modal-content p');
   
-  function toggleModal1() {
-    modal1.classList.toggle('show-modal-1');
+  function togglePlayerModal(e) {
+    let onePlayerIDs = ['one-player-mode', 'sg-btn1', 'close-1'];
+    let twoPlayerIDs = ['two-player-mode', 'sg-btn2', 'close-2'];
+    if (onePlayerIDs.includes(e.target.id)) {
+      onePlayerModal.classList.toggle('show-one-player-modal');
+    } else if (twoPlayerIDs.includes(e.target.id)) {
+      twoPlayerModal.classList.toggle('show-two-player-modal');
+    }
   }
   
-  function toggleModal2() {
-    modal2.classList.toggle('show-modal-2');
+  function windowOnClick(event) {
+    if (event.target === messageModal) {
+      toggleMessageModal();
+    } else if (event.target === onePlayerModal || event.target === twoPlayerModal) {
+      togglePlayerModal();
+    }
   }
-  
+
   function toggleMessageModal(winner, player2) {
     messageModal.classList.toggle('show-message-modal');
     if (player2 === 'Computer') {
@@ -231,6 +258,10 @@ const modalController = (() => {
       message.innerText = `${winner} wins`;
     }
   }
+  
+  function closeMessageModal() {
+    messageModal.classList.toggle('show-message-modal');
+  }
 
   function toggleTie() {
     messageModal.classList.toggle('show-message-modal');
@@ -238,27 +269,19 @@ const modalController = (() => {
     message.innerText = 'Play again';
   }
   
-  function closeMessageModal() {
-    messageModal.classList.toggle('show-message-modal');
-  }
 
-  function windowOnClick(event) {
-    if (event.target === modal1) {
-      toggleModal1();
-    } else if (event.target === modal2) {
-      toggleModal2();
-    } else if (event.target === messageModal) {
-      toggleMessageModal();
-    }
-  }
-  
-  trigger1.addEventListener('click', toggleModal1);
-  trigger2.addEventListener('click', toggleModal2);
-  closeButton1.addEventListener('click', toggleModal1);
-  closeButton2.addEventListener('click', toggleModal2);
+  modalTrigger.forEach((trigger) => {
+    trigger.addEventListener('click', togglePlayerModal);
+  });
+  closePlayerModal.forEach((button) => {
+    button.addEventListener('click', togglePlayerModal);
+  });
+  // closeButton1.addEventListener('click', togglePlayerModal);
+  // closeButton2.addEventListener('click', togglePlayerModal);
+
   closeButton3.addEventListener('click', closeMessageModal);
   window.addEventListener('click', windowOnClick);
 
-  return { trigger1, trigger2, toggleModal1, toggleModal2, toggleMessageModal, toggleTie };
+  return {togglePlayerModal, toggleMessageModal, toggleTie, modalTrigger};
 
 })();
