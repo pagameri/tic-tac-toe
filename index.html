@@ -10,7 +10,16 @@
 <body>
   <div class="container">
       <h1>Tic Tac Toe</h1>
-      <div>
+      <div class="rounds">
+          <div>Round:</div>
+          <div class="round-counter"></div>
+          <div class="player-1-container">Player 1:</div>
+          <div class="player-1-counter"></div>
+          <div class="player-2-container">Player 2:</div>
+          <div class="player-2-counter"></div>
+      </div>
+      <div class="button-container">
+        <button class="reset">Reset Game</button>
         <button class="trigger-1">1 Player mode</button>
         <div class="modal modal-1">
           <div class="modal-content">
@@ -37,14 +46,17 @@
             </form>
           </div>
         </div>
+        <button class="next-round-main">Next round</button>
         <div class="modal message-modal">
           <div class="modal-content">
             <button type="button" class="close-button-3">&times;</button>
             <h1 class="message-head"></h1>
             <p></p>
+            <button class="next-round">Next round</button>
           </div>
         </div>
       </div>
+      <div class="message-container">Chose player mode to start</div>
       <div class="board-container">
         <div class="cell" id="0"></div>
         <div class="cell" id="1"></div>

@@ -10,10 +10,38 @@
   max-width: 800px;
   margin: auto;
   display: grid;
-  grid-template-rows: 100px 150px 1fr 150px;
+  grid-template-rows: 80px 80px 100px 80px 1fr 100px;
   align-items: center;
   justify-items: center;
   background-color: #eff6ff;
+}
+
+.rounds {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: repeat(3, 1fr);
+  margin-right: 200px;
+  justify-items: end;
+  justify-self: end;
+}
+
+.button-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.next-round-main,
+.reset {
+  visibility: hidden;
+}
+
+.reset {
+  background-color: lightgray;
+}
+
+.next-round-main {
+  background-color: #38bdf8;
 }
 
 .modal {
@@ -68,6 +96,11 @@
   margin-top: 30px;
   font-size: 1.2rem;
   text-align: center;
+}
+
+.next-round {
+  position: relative;
+  float: right;
 }
 
 button {
