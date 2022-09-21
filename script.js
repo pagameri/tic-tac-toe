@@ -1,6 +1,6 @@
 const Player = (name, sign, start, winCount, winner) => {
+  
   const getSign = () => sign;
-  // const getName = () => name;
   name: name;
   let board = ['', '', '', '', '', '', '', '', ''];
   start: start;
@@ -11,12 +11,15 @@ const Player = (name, sign, start, winCount, winner) => {
 }
 
 
+
 const playerSetup = (() => {
+  
   let player1 = Player('', 'X', true, 0, false);
   let player2 = Player('', 'O', false, 0, false);
 
   return { player1, player2 }
 })();
+
 
 
 const boardSetup = (() => {
@@ -44,8 +47,9 @@ const boardSetup = (() => {
 
     messageContainer.innerText = 'Select type of game to start';
   };
-
+  
   startUp();
+
 
   startGameBtn.forEach((button) => {
     button.addEventListener('click', e => {
@@ -103,8 +107,6 @@ const boardSetup = (() => {
 
         gameFlow.playGame();
       }
-
-     
     });
   });
  
@@ -122,15 +124,11 @@ const boardSetup = (() => {
 
   resetBtn.addEventListener('click', () => {
     gameControl.resetGame();
-
-
-
-});
+  });
 
   return { startUp, messageContainer, resetBtn, round }
 
 })();
-
 
 
 
@@ -141,7 +139,7 @@ const gameControl = (() => {
   const cells = document.querySelectorAll('.cell');
 
 
-  const render = () => {
+  const renderBoard = () => {
     let index = 0;
 
     cells.forEach((cell) => {
@@ -262,11 +260,10 @@ const gameControl = (() => {
   }
 
 
-
-
-  return { board, render, emptyCells, updateBoard, nextRound, updateRoundCounter, resetGame }
+  return { board, renderBoard, emptyCells, updateBoard, nextRound, updateRoundCounter, resetGame }
 
 })();
+
 
 
 const gameFlow = (() => {
@@ -300,7 +297,7 @@ const gameFlow = (() => {
 
       gameControl.emptyCells();
 
-      gameControl.render();
+      gameControl.renderBoard();
 
       _checkForWinner();
     }
@@ -320,11 +317,11 @@ const gameFlow = (() => {
         playAgainstComputer();
       }
     };
-    
   }
 
   
   const _waitForPlayer = (event) => {
+    
     let index = event.target.id;
     let cell = gameControl.board[index];
     
@@ -333,9 +330,11 @@ const gameFlow = (() => {
 
       gameControl.emptyCells();
 
-      gameControl.render();
+      gameControl.renderBoard();
 
       _checkForWinner();
+    } else {
+      _waitForPlayer(event);
     }
     if (!playerSetup.player1.winner) {
       _playComputer();
@@ -344,6 +343,7 @@ const gameFlow = (() => {
 
       
   const _playComputer = () => {
+    
     let availableIndexes = [];
  
     for (let i = 0; i < 9; i++) {
@@ -363,7 +363,7 @@ const gameFlow = (() => {
 
     gameControl.emptyCells();
 
-    gameControl.render();
+    gameControl.renderBoard();
 
     _checkForWinner();
   }  
@@ -409,7 +409,7 @@ const gameFlow = (() => {
             boardContainer.onclick = '';
 
             boardSetup.messageContainer.innerText = '';
-            
+
             modalController.toggleTie();
           } 
         }
@@ -458,6 +458,7 @@ const modalController = (() => {
     }
   }
 
+  
   const toggleGameMessageModal = () => {
     messageModal.classList.toggle('show-message-modal');
 
