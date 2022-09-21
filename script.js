@@ -72,6 +72,12 @@ const boardSetup = (() => {
         playerSetup.player2.name = 'Computer';
 
         modalController.togglePlayerModal(e);
+        
+        messageContainer.innerText = `${playerSetup.player1.name}\'s turn`;
+
+        gameControl.updateRoundCounter();
+  
+        gameFlow.playAgainstComputer();
 
       } else if (e.target.id === 'sg-btn2') {
         let player1Input = document.querySelector('#player1').value;
@@ -90,21 +96,22 @@ const boardSetup = (() => {
         }
 
         modalController.togglePlayerModal(e);
+
+        messageContainer.innerText = `${playerSetup.player1.name}\'s turn`;
+
+        gameControl.updateRoundCounter();
+
+        gameFlow.playGame();
       }
 
-      messageContainer.innerText = `${playerSetup.player1.name}\'s turn`;
-
-      gameControl.updateRoundCounter();
-
-      gameFlow.playGame();
+     
     });
   });
  
 
   nextRoundBtn.addEventListener('click', () => {
-    gameControl.nextRound();
-
     modalController.closeMessageModal();
+    gameControl.nextRound();
   });
 
 
@@ -138,7 +145,12 @@ const gameControl = (() => {
     let index = 0;
 
     cells.forEach((cell) => {
-      cell.innerText = board[index];
+      cell.innerText = gameControl.board[index];
+      if (cell.innerText === 'X') {
+        cell.style.color = 'red';
+      } else {
+        cell.style.color = 'blue';
+      }
       index++;
     });
   }
@@ -158,7 +170,8 @@ const gameControl = (() => {
       } else {
         boardSetup.messageContainer.innerText = `${playerSetup.player1.name}\'s turn`;
       }
-      board[index] = sign;
+      gameControl.board[index] = sign;
+
       player.board.splice(index, 1, sign);
     } 
 
@@ -172,13 +185,17 @@ const gameControl = (() => {
     
     updateRoundCounter();
 
-    if (playerSetup.player1.turn) {
+    if (playerSetup.player1.start) {
       boardSetup.messageContainer.innerText = `${playerSetup.player1.name}\'s turn`;
     } else {
       boardSetup.messageContainer.innerText = `${playerSetup.player2.name}\'s turn`;
     }
 
-    gameFlow.playGame();
+    if (playerSetup.player2.name !== 'Computer') {
+      gameFlow.playGame();
+    } else {
+      gameFlow.playAgainstComputer();
+    }
   }
 
 
@@ -220,10 +237,12 @@ const gameControl = (() => {
 
     roundCounter.innerText = boardSetup.round;
 
-    player1Container.innerText = `X: ${playerSetup.player1.name}:`;
+    player1Container.innerText = `${playerSetup.player1.name}:`;
+    player1Container.style.color = 'red';
     player1Counter.innerText = playerSetup.player1.winCount;
 
-    player2Container.innerText = `O: ${playerSetup.player2.name}:`;
+    player2Container.innerText = `${playerSetup.player2.name}:`;
+    player2Container.style.color = 'blue';
     player2Counter.innerText = playerSetup.player2.winCount;
   }
   
@@ -260,8 +279,9 @@ const gameFlow = (() => {
     [0, 4, 8], [2, 4, 6]
   ];
   
-
+  
   const playGame = () => {
+    
     boardContainer.onclick = (event) => {
       let index = event.target.id;
       let cell = gameControl.board[index];
@@ -285,6 +305,70 @@ const gameFlow = (() => {
       _checkForWinner();
     }
   }
+
+
+  const playAgainstComputer = () => {
+    
+    if (gameFlow.turnsCounter % 2 === 0 && playerSetup.player1.start || gameFlow.turnsCounter % 2 !== 0 && playerSetup.player2.start) {
+      boardContainer.onclick = (event) => {
+        _waitForPlayer(event);        
+      } 
+      
+    } else if (gameFlow.turnsCounter % 2 === 0 && playerSetup.player2.start || gameFlow.turnsCounter % 2 !== 0 && playerSetup.player1.start) {
+      _playComputer()
+      if (!playerSetup.player2.winner) {
+        playAgainstComputer();
+      }
+    };
+    
+  }
+
+  
+  const _waitForPlayer = (event) => {
+    let index = event.target.id;
+    let cell = gameControl.board[index];
+    
+    if (cell === '') {
+      gameControl.updateBoard(playerSetup.player1, index);
+
+      gameControl.emptyCells();
+
+      gameControl.render();
+
+      _checkForWinner();
+    }
+    if (!playerSetup.player1.winner) {
+      _playComputer();
+    }
+  }
+
+      
+  const _playComputer = () => {
+    let availableIndexes = [];
+ 
+    for (let i = 0; i < 9; i++) {
+      if (gameControl.board[i] === '') {
+        availableIndexes.push(i);
+      }
+    }
+
+    function getRandomNumber(indexes) {
+      // let rand = Math.random()*indexes.length;
+      let randomNumber = indexes[Math.floor(Math.random()*indexes.length)];
+      return randomNumber;
+    }
+    
+    let computersMove = getRandomNumber(availableIndexes);
+
+    gameControl.updateBoard(playerSetup.player2, computersMove);
+
+    gameControl.emptyCells();
+
+    gameControl.render();
+
+    _checkForWinner();
+  }  
+
 
   const _checkForWinner = () => {
     if (gameFlow.turnsCounter >= 4) {
@@ -334,7 +418,7 @@ const gameFlow = (() => {
     }
 
 
-  return { playGame, boardContainer, turnsCounter }
+  return { playAgainstComputer, playGame, boardContainer, turnsCounter }
 
 })();
 
@@ -357,8 +441,10 @@ const modalController = (() => {
 
     if (onePlayerIDs.includes(e.target.id)) {
       onePlayerModal.classList.toggle('show-one-player-modal');
+      boardSetup.messageContainer.innerText = 'Enter your name';
     } else if (twoPlayerIDs.includes(e.target.id)) {
       twoPlayerModal.classList.toggle('show-two-player-modal');
+      boardSetup.messageContainer.innerText = 'Enter players\' name';
     }
   }
   
@@ -394,6 +480,7 @@ const modalController = (() => {
 
   const  closeMessageModal = () => {
     messageModal.classList.toggle('show-message-modal');
+    boardSetup.messageContainer.innerText = 'Click \'Next round\' to continue';
   }
 
 
