@@ -353,7 +353,6 @@ const gameFlow = (() => {
     }
 
     function getRandomNumber(indexes) {
-      // let rand = Math.random()*indexes.length;
       let randomNumber = indexes[Math.floor(Math.random()*indexes.length)];
       return randomNumber;
     }
@@ -409,6 +408,8 @@ const gameFlow = (() => {
           } else {
             boardContainer.onclick = '';
 
+            boardSetup.messageContainer.innerText = '';
+            
             modalController.toggleTie();
           } 
         }
