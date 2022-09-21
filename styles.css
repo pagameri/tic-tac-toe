@@ -10,10 +10,15 @@
   max-width: 800px;
   margin: auto;
   display: grid;
-  grid-template-rows: 80px 80px 100px 80px 1fr 100px;
+  grid-template-rows: 100px 80px 100px 80px 1fr 100px;
   align-items: center;
   justify-items: center;
   background-color: #eff6ff;
+}
+
+h1 {
+  font-size: 2.5rem;
+  color: #701a75;
 }
 
 .rounds {
@@ -23,6 +28,12 @@
   margin-right: 200px;
   justify-items: end;
   justify-self: end;
+  color: #701a75;
+}
+
+.rounds div:first-child,
+.rounds div:nth-child(2) {
+  font-weight: bold;
 }
 
 .button-container {
@@ -31,16 +42,16 @@
   gap: 20px;
 }
 
-.next-round-main,
-.reset {
+.next-round-button-main,
+.reset-button {
   visibility: hidden;
 }
 
-.reset {
+.reset-button {
   background-color: lightgray;
 }
 
-.next-round-main {
+.next-round-buton-main {
   background-color: #38bdf8;
 }
 
@@ -68,8 +79,7 @@
   border-radius: 0.5rem;
 }
 
-.close-button-1,
-.close-button-2,
+.close-player-modal,
 .close-button-3 {
   float: right;
   width: 1.5rem;
@@ -116,8 +126,8 @@ button:hover {
   background-color: #7dd3fc;
 }
 
-.show-modal-1,
-.show-modal-2,
+.show-one-player-modal,
+.show-two-player-modal,
 .show-message-modal {
   opacity: 1;
   visibility: visible;
@@ -134,6 +144,12 @@ input {
   padding: 0.4rem;
   font-size: 0.9rem;
   border: 1px solid #1e3a8a;
+}
+
+.message-container {
+  font-size: 1.3rem;
+  color: #701a75;
+  font-weight: bold;
 }
 
 .board-container {
@@ -170,7 +186,3 @@ input {
   border-bottom: none;
 }
 
-.hint div {
-  font-size: 1.1rem;
-  font-weight: bold;
-}

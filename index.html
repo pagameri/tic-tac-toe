@@ -19,40 +19,40 @@
           <div class="player-2-counter"></div>
       </div>
       <div class="button-container">
-        <button class="reset">Reset Game</button>
-        <button class="trigger-1">1 Player mode</button>
-        <div class="modal modal-1">
+        <button class="reset-button">Reset Game</button>
+        <button class="modal-trigger" id="one-player-mode">1 Player mode</button>
+        <div class="modal one-player-modal">
           <div class="modal-content">
-            <button type="button" class="close-button-1">&times;</button>
+            <button type="button" class="close-player-modal" id="close-1">&times;</button>
             <h1>Create player</h1>
             <form action="" class="one-player">
               <label for="player">Player: </label>
-              <input type="text" name="player1" id="player">
+              <input type="text" name="player1" id="player" placeholder="Player 1">
               <button class="start-game-button" id="sg-btn1">START GAME</button>
             </form>
           </div>
         </div>
-        <button class="trigger-2">2 Player mode</button>
-        <div class="modal modal-2">
+        <button class="modal-trigger" id="two-player-mode">2 Player mode</button>
+        <div class="modal two-player-modal">
           <div class="modal-content">
-            <button type="button" class="close-button-2">&times;</button>
+            <button type="button" class="close-player-modal" id="close-2">&times;</button>
             <h1>Create players</h1>
             <form action="" class="two-player">
               <label for="player1">Player 1: </label>
-              <input type="text" name="player1" id="player1">
+              <input type="text" name="player1" id="player1" placeholder="Player 1">
               <label for="player2">Player 2:</label>
-              <input type="text" name="player2" id="player2">
+              <input type="text" name="player2" id="player2" placeholder="Player 2">
               <button class="start-game-button" id="sg-btn2">START GAME</button>
             </form>
           </div>
         </div>
-        <button class="next-round-main">Next round</button>
+        <button class="next-round-button-main">Next round</button>
         <div class="modal message-modal">
           <div class="modal-content">
             <button type="button" class="close-button-3">&times;</button>
             <h1 class="message-head"></h1>
             <p></p>
-            <button class="next-round">Next round</button>
+            <button class="next-round-button">Next round</button>
           </div>
         </div>
       </div>
@@ -68,11 +68,7 @@
         <div class="cell" id="7"></div>
         <div class="cell" id="8"></div>
       </div>
-      <div class="hint">
-        <div>Select player mode:</div>
-        <p>* to start game</p>
-        <p>* for new game</p>
-      </div>
+     
   <script src="script.js"></script>
 </body>
 </html>
